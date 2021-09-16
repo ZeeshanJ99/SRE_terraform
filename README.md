@@ -5,6 +5,9 @@
 ## What is terraform
 Terraform (made by hashicorp) is a service Orchestration tool. This is the automated configuration, management, and coordination of computer systems, applications, and services. Orchestration helps IT to more easily manage complex tasks and workflows. IT teams must manage many servers and applications, but doing so manually isn’t a scalable strategy. 
 
+![image](https://user-images.githubusercontent.com/88186084/133647175-bb2ea567-2952-4454-a8de-6a5c299d6b41.png)
+
+
 -----------------------------------------------------------
 ## Securing AWS keys for terraform
 
@@ -95,9 +98,10 @@ This will also take place in the `main.tf` file underneath the code for intialis
 
 ---------------------------------------------------------------------------------
 
-# Main.tf
+# Main.tf code
+
         
-### Lets set up or cloud provider with Terraform
+## Lets set up or cloud provider with Terraform
 
         provider "aws" {
         region = "eu-west-1"
@@ -105,7 +109,7 @@ This will also take place in the `main.tf` file underneath the code for intialis
 
 ----------------------------------------
 
-### VPC
+## VPC
 
         resource "aws_vpc" "sre_zeeshan_vpc_tf" {
         cidr_block       = "10.109.0.0/16"
@@ -118,7 +122,7 @@ This will also take place in the `main.tf` file underneath the code for intialis
 
 --------------------------------------------------
 
-### Subnet
+## Subnet
 
         resource "aws_subnet" "sre_zeeshan_app_subnet" {
                 vpc_id = var.vpc_id
@@ -246,9 +250,7 @@ Provisioner is commented out as it does not work at the moment.
 ----------------------------------------------------------------------------
 
 ## Variable.tf
-The variable.tf file is where you can add your variables in so that they are not visible on the main.tf. This should be added to `.gitignore` as to keep the contents safe. They are referenced with a `var.name` within the code above
-
-The following variable examples have been added to the file and referenced in the code above
+The variable.tf file is where you can add your variables in so that they are not visible on the main.tf. This should be added to `.gitignore` as to keep the contents safe. They are referenced with a `var.name` within the code above. This is done with a wide variety of variables you will use. These following variable examples have been added to the file and referenced in the code above:
 
 - VPC
 - Name
@@ -258,14 +260,10 @@ The following variable examples have been added to the file and referenced in th
 - Route table
 - Security Groups (sg_id)
 
+
 The way in which to set out all the variables within the variable.tf file is as follows:
 
         variable "vpc_id" {
         default = "your vpc-id here"
         }
-        
-
-
-
-
 
