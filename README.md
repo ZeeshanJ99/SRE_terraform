@@ -1,8 +1,13 @@
 # Terraform Orchestration
+
+------------------------------------
+
 ## What is terraform
-## Why use Terraform
-#### Setting up Terraform
-##### Securing AWS keys for terraform
+Orchestration: Service Orchestration is the automated configuration, management, and coordination of computer systems, applications, and services. Orchestration helps IT to more easily manage complex tasks and workflows. IT teams must manage many servers and applications, but doing so manually isn’t a scalable strategy. - e.g. Terraform (made by Hashicorp) is a service orchestration tool
+
+--------------------------------------------------------
+
+## Setting up Terraform
 
 - create env var to secure AWS keys
 - Restart the terminal
@@ -14,6 +19,22 @@
         }
 
 - Lets run this code with `terraform init`
+
+---------------------------------------------------------------------------
+
+## Securing AWS keys for terraform
+
+- Search `env` after pressing the windows key
+- Select `edit the system environment variables`
+- In the `advanced` header select `environment variables`
+
+- Under User variables select `new`
+- Create the name `AWS_ACCESS_KEY_ID` and paste in your AWS access key as the `value`
+- Create another name as `AWS_SECRET_ACCESS_KEY` and paste in your AWS secret key as the `value`
+
+**Never share these keys with anyone**
+
+---------------------------------------------------------------------
 
 ### Creating resources on AWS
 - Lets start with Launching an EC2 instance using the app AMI
@@ -38,16 +59,14 @@ This will also take place in the `main.tf` file underneath the code for intialis
 
         }
 
+---------------------------------------------
 
+## Main commands for terraform:
 - Initialise terraform - `terraform init`
 - Check any syntax errors `terraform plan`
 - Apply your changes - `terraform apply`
 - Destroy - `terraform destroy`
 
-
-
-
-## Main commands for terraform:
 
         init          Prepare your working directory for other commands
         validate      Check whether the configuration is valid
@@ -75,7 +94,7 @@ This will also take place in the `main.tf` file underneath the code for intialis
         version       Show the current Terraform version
         workspace     Workspace management
 
--------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
 
 # Main.tf
         
