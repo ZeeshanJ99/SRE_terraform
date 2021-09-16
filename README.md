@@ -3,7 +3,20 @@
 ------------------------------------
 
 ## What is terraform
-Orchestration: Service Orchestration is the automated configuration, management, and coordination of computer systems, applications, and services. Orchestration helps IT to more easily manage complex tasks and workflows. IT teams must manage many servers and applications, but doing so manually isn’t a scalable strategy. - e.g. Terraform (made by Hashicorp) is a service orchestration tool
+Terraform (made by hashicorp) is a service Orchestration tool. This is the automated configuration, management, and coordination of computer systems, applications, and services. Orchestration helps IT to more easily manage complex tasks and workflows. IT teams must manage many servers and applications, but doing so manually isn’t a scalable strategy. 
+
+-----------------------------------------------------------
+## Securing AWS keys for terraform
+
+- Search `env` after pressing the windows key
+- Select `edit the system environment variables`
+- In the `advanced` header select `environment variables`
+
+- Under User variables select `new`
+- Create the name `AWS_ACCESS_KEY_ID` and paste in your AWS access key as the `value`
+- Create another name as `AWS_SECRET_ACCESS_KEY` and paste in your AWS secret key as the `value`
+
+**Never share these keys with anyone**
 
 --------------------------------------------------------
 
@@ -19,20 +32,6 @@ Orchestration: Service Orchestration is the automated configuration, management,
         }
 
 - Lets run this code with `terraform init`
-
----------------------------------------------------------------------------
-
-## Securing AWS keys for terraform
-
-- Search `env` after pressing the windows key
-- Select `edit the system environment variables`
-- In the `advanced` header select `environment variables`
-
-- Under User variables select `new`
-- Create the name `AWS_ACCESS_KEY_ID` and paste in your AWS access key as the `value`
-- Create another name as `AWS_SECRET_ACCESS_KEY` and paste in your AWS secret key as the `value`
-
-**Never share these keys with anyone**
 
 ---------------------------------------------------------------------
 
