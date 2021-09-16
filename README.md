@@ -243,4 +243,29 @@ This will also take place in the `main.tf` file underneath the code for intialis
 
 Provisioner is commented out as it does not work at the moment.
 
+----------------------------------------------------------------------------
+
+## Variable.tf
+The variable.tf file is where you can add your variables in so that they are not visible on the main.tf. This should be added to `.gitignore` as to keep the contents safe. They are referenced with a `var.name` within the code above
+
+The following variable examples have been added to the file and referenced in the code above
+
+- VPC
+- Name
+- AMI
+- Subnet
+- Internet Gateway
+- Route table
+- Security Groups (sg_id)
+
+The way in which to set out all the variables within the variable.tf file is as follows:
+
+        variable "vpc_id" {
+        default = "your vpc-id here"
+        }
+        
+
+
+
+
 
