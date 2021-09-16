@@ -6,7 +6,7 @@
 
 - create env var to secure AWS keys
 - Restart the terminal
-- Create a file called main.tf
+- Create a file called `main.tf`
 - add the code to initialise terraform with provider AWS on the `main.tf` file
 
         provider "aws" {
@@ -17,7 +17,7 @@
 
 ### Creating resources on AWS
 - Lets start with Launching an EC2 instance using the app AMI
-- ami id ` `
+- ami id
 - `sre_key.pem` file
 - AWS keys setup is already done
 - public ip
