@@ -11,7 +11,6 @@
 
         provider "aws" {
             region = "eu-west-1"
-
         }
 
 - Lets run this code with `terraform init`
