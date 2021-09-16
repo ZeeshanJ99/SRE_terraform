@@ -122,7 +122,7 @@ This will also take place in the `main.tf` file underneath the code for intialis
         description = "sre_zeeshan_app_sg_terraform"
         vpc_id = var.vpc_id # attaching the SG with your own VPC
 
-### inbound rules
+### Inbound rules
 
         ingress {
         from_port       = "80"
@@ -133,7 +133,7 @@ This will also take place in the `main.tf` file underneath the code for intialis
 
 ------------------------------------
 
-#### ssh access
+#### SSH access
 
         ingress {
                 from_port       = "22"
@@ -144,7 +144,7 @@ This will also take place in the `main.tf` file underneath the code for intialis
 
 -----------------------------------------------
 
-#### allow port 3000
+#### Allow port 3000
 
         ingress {
                 from_port       = "3000"
@@ -171,7 +171,7 @@ This will also take place in the `main.tf` file underneath the code for intialis
 
 ------------------------------------------------------
 
-## internet gateway
+## Internet Gateway
 
         resource "aws_internet_gateway" "sre_zeeshan_terraform_ig" {
         vpc_id = var.vpc_id
@@ -183,7 +183,7 @@ This will also take place in the `main.tf` file underneath the code for intialis
 
 -------------------------------------------
 
-##  route table
+## Route table
 
         resource "aws_route" "sre_zeeshan_route_ig_connection" {
         route_table_id = var.route_table_id
