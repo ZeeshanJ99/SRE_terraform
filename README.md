@@ -7,12 +7,12 @@
 - create env var to secure AWS keys
 - Restart the terminal
 - Create a file called main.tf
-- add the code to initialise terraform with provider AWS
+- add the code to initialise terraform with provider AWS on the `main.tf` file
 
-provider "aws" {
-    region = "eu-west-1"
+        provider "aws" {
+            region = "eu-west-1"
 
-}
+        }
 
 - Lets run this code with `terraform init`
 
@@ -24,7 +24,31 @@ provider "aws" {
 - public ip
 - type of the instance `t2micro`
 
-Main commands for terraform:
+This will also take place in the `main.tf` file underneath the code for intialising:
+
+
+        # Lets start with Launching an EC2 instance using the app AMI
+
+        resource "aws_instance" "app_instance" {
+        ami = "ami-00cce017f5ffc9635"
+        instance_type = "t2.micro"
+        associate_public_ip_address = true
+        tags = {
+        Name = "sre_zeeshan_terraform_app"
+        }
+
+        }
+
+
+terraform init
+terraform plan
+terraform apply
+terraform destroy
+
+
+
+
+## Main commands for terraform:
 
         init          Prepare your working directory for other commands
         validate      Check whether the configuration is valid
