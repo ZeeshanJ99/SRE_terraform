@@ -39,10 +39,10 @@ This will also take place in the `main.tf` file underneath the code for intialis
         }
 
 
-terraform init
-terraform plan
-terraform apply
-terraform destroy
+- Initialise terraform - `terraform init`
+- Check any syntax errors `terraform plan`
+- Apply your changes - `terraform apply`
+- Destroy - `terraform destroy`
 
 
 
@@ -74,3 +74,155 @@ terraform destroy
         untaint       Remove the 'tainted' state from a resource instance
         version       Show the current Terraform version
         workspace     Workspace management
+
+-------------------------------------------------------------------------------------------------------------
+
+# Main.tf
+        
+### Lets set up or cloud provider with Terraform
+
+        provider "aws" {
+        region = "eu-west-1"
+        }
+
+----------------------------------------
+
+### VPC
+
+        resource "aws_vpc" "sre_zeeshan_vpc_tf" {
+        cidr_block       = "10.109.0.0/16"
+        instance_tenancy = "default"
+
+        tags = {
+        Name = "sre_zeeshan_vpc_tf"
+        }
+                }
+
+--------------------------------------------------
+
+### Subnet
+
+        resource "aws_subnet" "sre_zeeshan_app_subnet" {
+                vpc_id = var.vpc_id
+                cidr_block = "10.109.9.0/24"
+                map_public_ip_on_launch = "true"  # Makes this a public subnet
+                availability_zone = "eu-west-1a"
+
+                tags = {
+                        Name = "sre_zeeshan_tf_app"
+                }
+        }
+
+--------------------------------------------------------------------------
+
+## Security groups and rules
+
+        resource "aws_security_group" "sre_zeeshan_app_sg_terraform"  {
+        name = "sre_zeeshan_app_sg_terraform"
+        description = "sre_zeeshan_app_sg_terraform"
+        vpc_id = var.vpc_id # attaching the SG with your own VPC
+
+### inbound rules
+
+        ingress {
+        from_port       = "80"
+        to_port         = "80"
+        protocol        = "tcp"
+        cidr_blocks     = ["0.0.0.0/0"]
+        }
+
+------------------------------------
+
+#### ssh access
+
+        ingress {
+                from_port       = "22"
+                to_port         = "22"
+                protocol        = "tcp"
+                cidr_blocks     = ["0.0.0.0/0"]
+                }
+
+-----------------------------------------------
+
+#### allow port 3000
+
+        ingress {
+                from_port       = "3000"
+                to_port         = "3000"
+                protocol        = "tcp"
+                cidr_blocks     = ["0.0.0.0/0"]
+        }
+
+--------------------------------------------------------
+
+### Outbound rules
+
+    egress {
+    from_port       = 0
+    to_port         = 0
+    protocol        = "-1" # allow all
+    cidr_blocks     = ["0.0.0.0/0"]
+        }
+
+        tags = {
+        Name = "sre_zeeshan_app_sg_terraform"
+        }
+                }
+
+------------------------------------------------------
+
+## internet gateway
+
+        resource "aws_internet_gateway" "sre_zeeshan_terraform_ig" {
+        vpc_id = var.vpc_id
+
+        tags = {
+        Name = "sre_zeeshan_terraform_ig"
+        }
+        }
+
+-------------------------------------------
+
+##  route table
+
+        resource "aws_route" "sre_zeeshan_route_ig_connection" {
+        route_table_id = var.route_table_id
+        destination_cidr_block = "0.0.0.0/0"
+        gateway_id = var.internet_gateway_id
+        }
+
+-----------------------------------------------
+
+## Lets start with Launching an EC2 instance using the app AMI
+
+        resource "aws_instance" "app_instance" {
+        ami = var.app-ami-id
+        subnet_id = var.aws_subnet
+        vpc_security_group_ids = [var.sg_id]
+        instance_type = "t2.micro"
+        associate_public_ip_address = true
+        tags = {
+        Name = "sre_zeeshan_terraform_app"
+        }
+
+        key_name = var.sre_key_name
+
+        connection {
+                type = "ssh"
+                user = "ubuntu"
+                private_key = var.aws_key_path
+                host = "${self.associate_public_ip_address}"
+        }
+
+        # provisioner "remote-exec"{
+        # inline = [
+        #       "cd app/app",
+        #        "pm2 start app.js"
+        #]
+        #}
+
+        }
+
+Provisioner is commented out as it does not work at the moment.
+
+
