@@ -362,4 +362,37 @@ The way in which to set out all the variables within the variable.tf file is as 
         variable "vpc_id" {
         default = "your vpc-id here"
         }
+        
+        
+------------------------------------------------------------
+
+## Load Balancer for our app
+
+- Name of load balancer
+- Internet facing
+- Ipv4 Ip address type
+- VPC type
+- region - eu-west-1a
+- security group
+- listeners and routing - create target group
+- Tags
+
+## creating our target group 
+- Instances - app instance
+- Target group name - sre_zeeshan_tf_tg
+- protocol and port - http 80
+- vpc - our vpc
+- protocol version - http1
+
+- Health checks 
+- health check protocol - http
+- health check path - /
+- port - traffic port
+- healthy threshold - 5
+- Unhealthy threshold - 2
+- Timeout - 5
+- interval - 30
+- success code - 300
+- tags
+
 
