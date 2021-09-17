@@ -100,6 +100,8 @@ This will also take place in the `main.tf` file underneath the code for intialis
 
 # Main.tf code which will launch app and db instances
 
+![image](https://user-images.githubusercontent.com/88186084/133792446-c532c53c-564f-4275-82dd-3f288fcb2123.png)
+
 ----------------------------------------------------------------
         
 ## Lets set up or cloud provider with Terraform
