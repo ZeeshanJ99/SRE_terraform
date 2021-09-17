@@ -98,8 +98,9 @@ This will also take place in the `main.tf` file underneath the code for intialis
 
 ---------------------------------------------------------------------------------
 
-# Main.tf code
+# Main.tf code which will launch app and db instances
 
+----------------------------------------------------------------
         
 ## Lets set up or cloud provider with Terraform
 
@@ -122,7 +123,7 @@ This will also take place in the `main.tf` file underneath the code for intialis
 
 --------------------------------------------------
 
-## Subnet
+## Subnet - App
 
         resource "aws_subnet" "sre_zeeshan_app_subnet" {
                 vpc_id = var.vpc_id
@@ -134,17 +135,35 @@ This will also take place in the `main.tf` file underneath the code for intialis
                         Name = "sre_zeeshan_tf_app"
                 }
         }
+        
+ -------------------------------------------------
+ 
+ ## Subnet - db
+ 
+    resource "aws_subnet" "sre_zeeshan_db_subnet" {
+            vpc_id = var.vpc_id
+            cidr_block = "10.109.10.0/24"
+            map_public_ip_on_launch = "true"  # Makes this a public subnet
+            availability_zone = "eu-west-1a"
+
+            tags = {
+                    Name = "sre_zeeshan_tf_db"
+            }
+     }
+
 
 --------------------------------------------------------------------------
 
-## Security groups and rules
+## Security groups and rules - app
 
         resource "aws_security_group" "sre_zeeshan_app_sg_terraform"  {
         name = "sre_zeeshan_app_sg_terraform"
         description = "sre_zeeshan_app_sg_terraform"
         vpc_id = var.vpc_id # attaching the SG with your own VPC
 
-### Inbound rules
+-------------------------------
+
+### Inbound rules - app
 
         ingress {
         from_port       = "80"
@@ -155,7 +174,7 @@ This will also take place in the `main.tf` file underneath the code for intialis
 
 ------------------------------------
 
-#### SSH access
+#### SSH access - app
 
         ingress {
                 from_port       = "22"
@@ -166,7 +185,7 @@ This will also take place in the `main.tf` file underneath the code for intialis
 
 -----------------------------------------------
 
-#### Allow port 3000
+#### Allow port 3000 - app
 
         ingress {
                 from_port       = "3000"
@@ -177,7 +196,7 @@ This will also take place in the `main.tf` file underneath the code for intialis
 
 --------------------------------------------------------
 
-### Outbound rules
+### Outbound rules - app
 
     egress {
     from_port       = 0
@@ -192,6 +211,53 @@ This will also take place in the `main.tf` file underneath the code for intialis
                 }
 
 ------------------------------------------------------
+
+## Security groups and rules - db
+
+        resource "aws_security_group" "sre_zeeshan_db_sg_terraform"  {
+         name = "sre_zeeshan_db_sg_terraform"
+         description = "sre_zeeshan_db_sg_terraform"
+         vpc_id = var.vpc_id # attaching the SG with your own VPC
+
+----------------------------------------------------------
+
+### Inbound rules - db
+
+    ingress {
+      from_port       = "27017"
+      to_port         = "27017"
+      protocol        = "tcp"
+      cidr_blocks     = ["0.0.0.0/0"]
+    }
+
+-------------------------------------
+
+#### SSH access - db
+
+    ingress {
+      from_port       = "22"
+      to_port         = "22"
+      protocol        = "tcp"
+      cidr_blocks     = ["0.0.0.0/0"]
+    }
+  
+----------------------------------------  
+
+### Outbound rules - db
+
+      egress {
+      from_port       = 0
+      to_port         = 0
+      protocol        = "-1" # allow all
+      cidr_blocks     = ["0.0.0.0/0"]
+    }
+
+    tags = {
+      Name = "sre_zeeshan_db_sg_terraform"
+    }
+     }
+
+------------------------------------------------------------------
 
 ## Internet Gateway
 
@@ -215,7 +281,7 @@ This will also take place in the `main.tf` file underneath the code for intialis
 
 -----------------------------------------------
 
-## Lets start with Launching an EC2 instance using the app AMI
+## Launching an app EC2 instance
 
         resource "aws_instance" "app_instance" {
         ami = var.app-ami-id
@@ -247,6 +313,31 @@ This will also take place in the `main.tf` file underneath the code for intialis
 
 Provisioner is commented out as it does not work at the moment.
 
+----------------------------------------------------------
+
+## Launching a db instance
+
+    resource "aws_instance" "db_instance" {
+     ami = var.db_ami_id
+     subnet_id = var.db_subnet
+     vpc_security_group_ids = [var.db_sg]
+     instance_type = "t2.micro"
+     associate_public_ip_address = true
+     tags = {
+       Name = "sre_zeeshan_terraform_db"
+      }
+
+     key_name = var.sre_key_name
+
+    connection {
+                    type = "ssh"
+                    user = "ubuntu"
+                    private_key = var.aws_key_path
+                    host = "${self.associate_public_ip_address}"
+            }
+    }
+
+
 ----------------------------------------------------------------------------
 
 ## Variable.tf
@@ -254,11 +345,14 @@ The variable.tf file is where you can add your variables in so that they are not
 
 - VPC
 - Name
-- AMI
-- Subnet
+- App AMI
+- DB AMI
+- App Subnet
+- DB Subnet
 - Internet Gateway
 - Route table
-- Security Groups (sg_id)
+- Security Groups for app (sg_id)
+- Security Groups for db (db_sg)
 
 
 The way in which to set out all the variables within the variable.tf file is as follows:
