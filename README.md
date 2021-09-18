@@ -367,6 +367,8 @@ The way in which to set out all the variables within the variable.tf file is as 
 ------------------------------------------------------------
 
 ## Load Balancer for our app
+![image](https://user-images.githubusercontent.com/88186084/133896522-55cf7dc4-9b13-480f-9db0-980d6cabd558.png)
+
 
 - Name of load balancer
 - Internet facing
