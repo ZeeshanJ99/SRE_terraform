@@ -394,7 +394,7 @@ The way in which to set out all the variables within the variable.tf file is as 
 
 ## Creating an application load balancer
 
-    resource "aws_lb" "sre_zeeshan_tf_LB" {
+    resource "aws_lb" "sre-zeeshan-tf-LB" {
         name = "sre-zeeshan-LB-tf"
         internal = false
         load_balancer_type = "application"
@@ -405,7 +405,7 @@ The way in which to set out all the variables within the variable.tf file is as 
         # security_groups =
 
         tags = {
-            Name = "sre_zeeshan_tf_LB"
+            Name = "sre-zeeshan-tf-LB"
         }
     }
 
