@@ -15,7 +15,6 @@ Using a service orchestration tool such as terraform helps to more easily manage
 
 <p><a href="https://learn.hashicorp.com/tutorials/terraform/infrastructure-as-code?wvideo=mo76ckwvz4"><img src="https://embed-fastly.wistia.com/deliveries/41c56d0e44141eb3654ae77f4ca5fb41.jpg?image_play_button_size=2x&amp;image_crop_resized=960x540&amp;image_play_button=1&amp;image_play_button_color=1563ffe0" width="800" height="500" style="width: 400px; height: 225px;"></a></p><p><a href="https://learn.hashicorp.com/tutorials/terraform/infrastructure-as-code?wvideo=mo76ckwvz4">Introduction to Infrastructure as Code with Terraform </a></p>
 
-
 -----------------------------------------------------------
 ## Securing AWS keys for terraform
 
