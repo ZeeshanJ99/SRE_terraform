@@ -5,7 +5,8 @@
 ## What is terraform
 Terraform (made by hashicorp) is a service Orchestration tool. This is the automated configuration, management, and coordination of computer systems, applications, and services. Orchestration helps IT to more easily manage complex tasks and workflows. IT teams must manage many servers and applications, but doing so manually isn’t a scalable strategy. 
 
-![image](https://user-images.githubusercontent.com/88186084/133647175-bb2ea567-2952-4454-a8de-6a5c299d6b41.png)
+![image](https://user-images.githubusercontent.com/88186084/133931163-7ef55c76-0f36-4526-9c06-296b26fee6e0.png)
+
 
 
 -----------------------------------------------------------
@@ -343,6 +344,9 @@ Provisioner is commented out as it does not work at the moment.
 ----------------------------------------------------------------------------
 
 ## Variable.tf
+
+![image](https://user-images.githubusercontent.com/88186084/133931657-0376cc37-dbd9-4093-ab7d-93956f27b77f.png)
+
 The variable.tf file is where you can add your variables in so that they are not visible on the main.tf. This should be added to `.gitignore` as to keep the contents safe. They are referenced with a `var.name` within the code above. This is done with a wide variety of variables you will use. These following variable examples have been added to the file and referenced in the code above:
 
 - VPC
