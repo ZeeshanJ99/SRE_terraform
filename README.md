@@ -72,19 +72,17 @@ This will also take place in the `main.tf` file underneath the code for intialis
 ---------------------------------------------
 
 ## Main commands for terraform:
-- Initialise terraform - `terraform init`
-- Check any syntax errors `terraform plan`
-- Apply your changes - `terraform apply`
-- Destroy - `terraform destroy`
+- Initialise terraform in current directory - `terraform init`
+- Check any syntax errors in `.tf` files -  `terraform plan`
+- Applies changes to `.tf` and executes - `terraform apply`
+- Destroys all infrastructure - `terraform destroy`
 
+-------------------------------------------------------------
 
-        init          Prepare your working directory for other commands
+## Here are some more terraform commands that may be of use:
+
+        
         validate      Check whether the configuration is valid
-        plan          Show changes required by the current configuration
-        apply         Create or update infrastructure
-        destroy       Destroy previously-created infrastructure
-
-        All other commands:
         console       Try Terraform expressions at an interactive command prompt
         fmt           Reformat your configuration in the standard style
         force-unlock  Release a stuck lock on the current workspace
