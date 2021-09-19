@@ -3,11 +3,13 @@
 ------------------------------------
 
 ## What is terraform
-Terraform (made by hashicorp) is a service Orchestration tool. This is the automated configuration, management, and coordination of computer systems, applications, and services. Orchestration helps IT to more easily manage complex tasks and workflows. IT teams must manage many servers and applications, but doing so manually isn’t a scalable strategy. 
+Terraform is HashiCorp’s infrastructure as code tool. It lets you define resources and infrastructure in human-readable, declarative configuration files, and manages your infrastructure’s lifecycle. It allows for automated configuration, management, and coordination of computer systems, applications, and services. A service orchestration tool such as terraform helps to more easily manage complex tasks and workflows. IT teams must manage many servers and applications, but doing so manually isn’t a scalable strategy.
+
 
 ![image](https://user-images.githubusercontent.com/88186084/133931163-7ef55c76-0f36-4526-9c06-296b26fee6e0.png)
 
 
+<p><a href="https://learn.hashicorp.com/tutorials/terraform/infrastructure-as-code?wvideo=mo76ckwvz4"><img src="https://embed-fastly.wistia.com/deliveries/41c56d0e44141eb3654ae77f4ca5fb41.jpg?image_play_button_size=2x&amp;image_crop_resized=960x540&amp;image_play_button=1&amp;image_play_button_color=1563ffe0" width="400" height="225" style="width: 400px; height: 225px;"></a></p><p><a href="https://learn.hashicorp.com/tutorials/terraform/infrastructure-as-code?wvideo=mo76ckwvz4">Introduction to Infrastructure as Code with Terraform | Terraform - HashiCorp Learn</a></p>
 
 -----------------------------------------------------------
 ## Securing AWS keys for terraform
@@ -370,35 +372,109 @@ The way in which to set out all the variables within the variable.tf file is as 
         
 ------------------------------------------------------------
 
-## Load Balancer for our app
+# Load Balancing and Auto Scaling
 ![image](https://user-images.githubusercontent.com/88186084/133896522-55cf7dc4-9b13-480f-9db0-980d6cabd558.png)
 
+-----------------------------------------------------
 
-- Name of load balancer
-- Internet facing
-- Ipv4 Ip address type
-- VPC type
-- region - eu-west-1a
-- security group
-- listeners and routing - create target group
-- Tags
+## Creating a launch configuration
 
-## creating our target group 
-- Instances - app instance
-- Target group name - sre_zeeshan_tf_tg
-- protocol and port - http 80
-- vpc - our vpc
-- protocol version - http1
+    resource "aws_launch_configuration" "app_launch_configuration" {
+        name = "sre_zeeshan_app_launch_configuration"
+        image_id = var.app-ami-id
+        instance_type = "t2.micro"
+    }
 
-- Health checks 
-- health check protocol - http
-- health check path - /
-- port - traffic port
-- healthy threshold - 5
-- Unhealthy threshold - 2
-- Timeout - 5
-- interval - 30
-- success code - 300
-- tags
+------------------------------------------------------------
 
+## Creating an application load balancer
 
+    resource "aws_lb" "sre_zeeshan_tf_LB" {
+        name = "sre-zeeshan-LB-tf"
+        internal = false
+        load_balancer_type = "application"
+        subnets = [
+            var.aws_subnet,
+            var.db_subnet
+        ]
+        # security_groups =
+
+        tags = {
+            Name = "sre_zeeshan_tf_LB"
+        }
+    }
+
+--------------------------------------------------
+
+## Creating an instance target group
+
+    resource "aws_lb_target_group" "sre_zeeshan_tf_TG" {
+        name = "sre-zeeshan-app-tf-TG"
+        port = 80
+        protocol = "HTTP"
+        vpc_id = var.vpc_id
+        # target_type = instance (default)
+
+        tags = {
+            Name = "sre_zeeshan_tf_TG"
+        }
+    }
+
+----------------------------------------
+
+## Creating a listener
+
+    resource "aws_lb_listener" "sre_zeeshan_listener" {
+        load_balancer_arn = sre-zeeshan-LB-tf
+        port = 80
+        protocol = "HTTP"
+
+        default_action {
+            type = "forward"
+            target_group_arn = sre_zeeshan_app_tf_TG.arn
+        }
+    }
+
+    resource "aws_lb_target_group_attachment" "sre_zeeshan_app_tf_TG" {
+        target_group_arn = sre_zeeshan_app_tf_TG
+        target_id = aws_instance.app_instance.id
+        port = 80
+    }
+    
+syntax errors on the target group arn part??
+
+---------------------------------------------------------------------
+
+## Creating an Auto Scaling group (for launch configuration)
+
+    resource "aws_autoscaling_group" "sre_zeeshan_tf_ASG" {
+        name = "sre_zeeshan_tf_ASG"
+
+        min_size = 1
+        desired_capacity = 1
+        max_size = 3
+
+        vpc_zone_identifier = [
+            var.aws_subnet,
+            var.db_subnet
+        ]
+
+        launch_configuration = aws_launch_configuration.app_launch_configuration.name
+    }
+
+    resource "aws_autoscaling_policy" "app_ASG_policy" {
+        name = "sre_zeeshan_app_ASG_policy"
+        policy_type = "TargetTrackingScaling"
+        estimated_instance_warmup = 100
+        # Use "cooldown" or "estimated_instance_warmup"
+        # Error: cooldown is only used by "SimpleScaling"
+        autoscaling_group_name = aws_autoscaling_group.sre_zeeshan_tf_ASG.name
+
+        target_tracking_configuration {
+            predefined_metric_specification {
+                predefined_metric_type = "ASGAverageCPUUtilization"
+                # Need to make sure to use valid options here
+            }
+            target_value = 50.0
+        }
+    }
