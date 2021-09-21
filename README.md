@@ -410,7 +410,7 @@ The way in which to set out all the variables within the variable.tf file is as 
 
 ## Creating an instance target group
 
-    resource "aws_lb_target_group" "sre_zeeshan_tf_TG" {
+    resource "aws_lb_target_group" "sre-zeeshan-app-tf-TG" {
         name = "sre-zeeshan-app-tf-TG"
         port = 80
         protocol = "HTTP"
@@ -420,30 +420,29 @@ The way in which to set out all the variables within the variable.tf file is as 
         tags = {
             Name = "sre_zeeshan_tf_TG"
         }
-    }
+        }
+
 
 ----------------------------------------
 
 ## Creating a listener
 
+    resource "aws_lb_target_group_attachment" "sre-zeeshan-app-tf-TG" {
+        target_group_arn = aws_lb_target_group.sre-zeeshan-app-tf-TG.arn
+        target_id = aws_instance.app_instance.id
+        port = 80
+        }
+
     resource "aws_lb_listener" "sre_zeeshan_listener" {
-        load_balancer_arn = sre-zeeshan-LB-tf
+        load_balancer_arn = aws_lb.sre-zeeshan-tf-LB.arn
         port = 80
         protocol = "HTTP"
 
-        default_action {
-            type = "forward"
-            target_group_arn = sre_zeeshan_app_tf_TG.arn
-        }
+    default_action {
+        type = "forward"
+        target_group_arn = aws_lb_target_group.sre-zeeshan-app-tf-TG.arn
     }
-
-    resource "aws_lb_target_group_attachment" "sre_zeeshan_app_tf_TG" {
-        target_group_arn = sre_zeeshan_app_tf_TG
-        target_id = aws_instance.app_instance.id
-        port = 80
-    }
-    
-syntax errors on the target group arn part??
+     }
 
 ---------------------------------------------------------------------
 
