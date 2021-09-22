@@ -479,3 +479,34 @@ The way in which to set out all the variables within the variable.tf file is as 
             target_value = 50.0
         }
     }
+    
+----------------------------------------------------
+
+## Creating a scale down policy
+
+    resource "aws_autoscaling_policy" "app_ASG_scaledown_averageNetworkIn_policy" {
+        name = "sre_zeeshan_ASG_scale_down_averageNetworkIn_policy"
+        # Scaledown averageNetworkIn policy
+        scaling_adjustment = -1
+        adjustment_type = "ChangeInCapacity"
+        cooldown = 300
+        autoscaling_group_name = aws_autoscaling_group.sre_zeeshan_tf_ASG.id
+    }
+    
+-------------------------------------------------------------
+
+## Creating an alarm on cloudwatch
+
+    resource "aws_cloudwatch_metric_alarm" "scale_down_averageNetworkIn_alarm_metric" {
+        alarm_name = "Scaledown averageNetworkIn alarm"
+        comparison_operator = "LessThanThreshold"
+        metric_name = "NetworkIn"
+        statistic = "Average"
+        threshold = "500000"
+        period = "120"
+        evaluation_periods = "2"
+        namespace = "AWS/EC2"
+        alarm_description = "Monitors ASG EC2 average network in (for scale down policy)"
+        alarm_actions = [aws_autoscaling_policy.app_ASG_scaledown_averageNetworkIn_policy.arn]
+    }
+
